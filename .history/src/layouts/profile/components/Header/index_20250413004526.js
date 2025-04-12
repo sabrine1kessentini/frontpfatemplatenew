@@ -20,7 +20,7 @@ import MDAvatar from "components/MDAvatar";
 import breakpoints from "assets/theme/base/breakpoints";
 
 // Images
-import defaultAvatar from "assets/images/sabrine2.jpg";
+import defaultAvatar from "assets/images/default-avatar.jpg";
 import backgroundImage from "assets/images/bg-profile.jpeg";
 
 function Header({ children }) {

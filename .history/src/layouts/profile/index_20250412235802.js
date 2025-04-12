@@ -11,26 +11,19 @@ import CircularProgress from "@mui/material/CircularProgress";
 import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
 
-// Material Dashboard 2 React example components
+// Example components
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";
 import ProfileInfoCard from "examples/Cards/InfoCards/ProfileInfoCard";
-import ProfilesList from "examples/Lists/ProfilesList";
 
 // Profile components
 import Header from "layouts/profile/components/Header";
 import PlatformSettings from "layouts/profile/components/PlatformSettings";
 
 function Overview() {
-  const [controller] = useMaterialUIController(); // Conservé pour les fonctionnalités futures
-  const [userProfile, setUserProfile] = useState({
-    name: "Sabrine Kessentini",
-    email: "",
-    filiere: "",
-    niveau: "",
-    groupe: "",
-  });
+  const [controller] = useMaterialUIController();
+  const [userProfile, setUserProfile] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -41,13 +34,7 @@ function Overview() {
             Authorization: `Bearer ${localStorage.getItem("access_token")}`,
           },
         });
-        setUserProfile({
-          name: response.data.name || "",
-          email: response.data.email || "",
-          filiere: response.data.filiere || "",
-          niveau: response.data.niveau || "",
-          groupe: response.data.groupe || "",
-        });
+        setUserProfile(response.data);
       } catch (error) {
         console.error("Error fetching profile:", error);
       } finally {
@@ -78,6 +65,23 @@ function Overview() {
           <Grid container spacing={1}>
             <Grid item xs={12} md={6} xl={4}>
               <PlatformSettings />
+            </Grid>
+            <Grid item xs={12} md={6} xl={4} sx={{ display: "flex" }}>
+              <Divider orientation="vertical" sx={{ ml: -2, mr: 1 }} />
+              <ProfileInfoCard
+                title="Informations du profil"
+                description={`Bienvenue ${userProfile?.name || "Utilisateur"}`}
+                info={{
+                  "Nom complet": userProfile?.name || "-",
+                  Email: userProfile?.email || "-",
+                  Filière: userProfile?.filiere || "-",
+                  Niveau: userProfile?.niveau || "-",
+                  Groupe: userProfile?.groupe || "-",
+                }}
+                action={{ route: "", tooltip: "Modifier le profil" }}
+                shadow={false}
+              />
+              <Divider orientation="vertical" sx={{ mx: 0 }} />
             </Grid>
           </Grid>
         </MDBox>

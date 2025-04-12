@@ -4,28 +4,25 @@ import { useMaterialUIController } from "context";
 
 // @mui material components
 import Grid from "@mui/material/Grid";
-import Divider from "@mui/material/Divider";
 import CircularProgress from "@mui/material/CircularProgress";
 
 // Material Dashboard 2 React components
 import MDBox from "components/MDBox";
-import MDTypography from "components/MDTypography";
 
 // Material Dashboard 2 React example components
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";
 import ProfileInfoCard from "examples/Cards/InfoCards/ProfileInfoCard";
-import ProfilesList from "examples/Lists/ProfilesList";
 
 // Profile components
 import Header from "layouts/profile/components/Header";
-import PlatformSettings from "layouts/profile/components/PlatformSettings";
+import ProfileInfo from "layouts/profile/components/PlatformSettings"; // Renommer l'import si nécessaire
 
 function Overview() {
-  const [controller] = useMaterialUIController(); // Conservé pour les fonctionnalités futures
+  const [controller] = useMaterialUIController();
   const [userProfile, setUserProfile] = useState({
-    name: "Sabrine Kessentini",
+    name: "",
     email: "",
     filiere: "",
     niveau: "",
@@ -76,8 +73,23 @@ function Overview() {
       <Header>
         <MDBox mt={5} mb={3}>
           <Grid container spacing={1}>
-            <Grid item xs={12} md={6} xl={4}>
-              <PlatformSettings />
+            <Grid item xs={12} md={6} xl={6}>
+              <ProfileInfo />
+            </Grid>
+            <Grid item xs={12} md={6} xl={6}>
+              <ProfileInfoCard
+                title="Détails supplémentaires"
+                description={`Profil étudiant`}
+                info={{
+                  "Nom complet": userProfile.name || "-",
+                  Email: userProfile.email || "-",
+                  Filière: userProfile.filiere || "-",
+                  Niveau: userProfile.niveau || "-",
+                  Groupe: userProfile.groupe || "-",
+                }}
+                action={{ route: "", tooltip: "Modifier le profil" }}
+                shadow={false}
+              />
             </Grid>
           </Grid>
         </MDBox>

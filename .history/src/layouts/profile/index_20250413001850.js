@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { useMaterialUIController } from "context";
+import { useAuth } from "authContext"; // Importez le contexte d'authentification
 
 // @mui material components
 import Grid from "@mui/material/Grid";
@@ -11,28 +11,21 @@ import CircularProgress from "@mui/material/CircularProgress";
 import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
 
-// Material Dashboard 2 React example components
+// Example components
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";
 import ProfileInfoCard from "examples/Cards/InfoCards/ProfileInfoCard";
-import ProfilesList from "examples/Lists/ProfilesList";
 
 // Profile components
 import Header from "layouts/profile/components/Header";
 import PlatformSettings from "layouts/profile/components/PlatformSettings";
 
 function Overview() {
-  const [controller] = useMaterialUIController(); // Conservé pour les fonctionnalités futures
-  const [userProfile, setUserProfile] = useState({
-    name: "Sabrine Kessentini",
-    email: "",
-    filiere: "",
-    niveau: "",
-    groupe: "",
-  });
-  const [loading, setLoading] = useState(true);
+  const { user } = useAuth(); // Récupérez l'utilisateur depuis le contexte
+  const [loading, setLoading] = useState(!user); // Chargement seulement si user n'est pas déjà disponible
 
+  // Si vous devez rafraîchir les données utilisateur
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
@@ -41,13 +34,7 @@ function Overview() {
             Authorization: `Bearer ${localStorage.getItem("access_token")}`,
           },
         });
-        setUserProfile({
-          name: response.data.name || "",
-          email: response.data.email || "",
-          filiere: response.data.filiere || "",
-          niveau: response.data.niveau || "",
-          groupe: response.data.groupe || "",
-        });
+        // Les données seront stockées dans le contexte via AuthProvider
       } catch (error) {
         console.error("Error fetching profile:", error);
       } finally {
@@ -55,8 +42,10 @@ function Overview() {
       }
     };
 
-    fetchUserProfile();
-  }, []);
+    if (!user) {
+      fetchUserProfile();
+    }
+  }, [user]);
 
   if (loading) {
     return (
@@ -78,6 +67,24 @@ function Overview() {
           <Grid container spacing={1}>
             <Grid item xs={12} md={6} xl={4}>
               <PlatformSettings />
+            </Grid>
+            <Grid item xs={12} md={6} xl={4} sx={{ display: "flex" }}>
+              <Divider orientation="vertical" sx={{ ml: -2, mr: 1 }} />
+              <ProfileInfoCard
+                title="Informations du profil"
+                description={`Bienvenue ${user?.name || "Utilisateur"}`}
+                info={{
+                  "Nom complet": user?.name || "Non disponible",
+                  Email: user?.email || "Non disponible",
+                  Filière: user?.filiere || "Non disponible",
+                  Niveau: user?.niveau || "Non disponible",
+                  Groupe: user?.groupe || "Non disponible",
+                }}
+                social={[]}
+                action={{ route: "", tooltip: "Modifier le profil" }}
+                shadow={false}
+              />
+              <Divider orientation="vertical" sx={{ mx: 0 }} />
             </Grid>
           </Grid>
         </MDBox>

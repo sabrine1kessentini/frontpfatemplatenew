@@ -79,6 +79,27 @@ function Overview() {
             <Grid item xs={12} md={6} xl={4}>
               <PlatformSettings />
             </Grid>
+            <Grid item xs={12} md={6} xl={4} sx={{ display: "flex" }}>
+              <Divider orientation="vertical" sx={{ ml: -2, mr: 1 }} />
+              <ProfileInfoCard
+                title="Informations du profil"
+                description={`Bienvenue ${userProfile.name || "Utilisateur"}`}
+                info={{
+                  "Nom complet": userProfile.name || "-",
+                  Email: userProfile.email || "-",
+                  Filière: userProfile.filiere || "-",
+                  Niveau: userProfile.niveau || "-",
+                  Groupe: userProfile.groupe || "-",
+                }}
+                social={[]}
+                action={{ route: "", tooltip: "Modifier le profil" }}
+                shadow={false}
+              />
+              <Divider orientation="vertical" sx={{ mx: 0 }} />
+            </Grid>
+            <Grid item xs={12} xl={4}>
+              <ProfilesList title="conversations" profiles={[]} shadow={false} />
+            </Grid>
           </Grid>
         </MDBox>
       </Header>

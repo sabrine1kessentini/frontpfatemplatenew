@@ -79,6 +79,9 @@ function Overview() {
             <Grid item xs={12} md={6} xl={4}>
               <PlatformSettings />
             </Grid>
+            <Grid item xs={12} xl={4}>
+              <ProfilesList title="conversations" profiles={[]} shadow={false} />
+            </Grid>
           </Grid>
         </MDBox>
       </Header>

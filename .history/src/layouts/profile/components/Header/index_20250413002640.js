@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
-import { useAuth } from "authContext";
+import { useAuth } from "../../../../../authContext";
 
 // @mui material components
 import Card from "@mui/material/Card";
@@ -12,16 +12,16 @@ import Icon from "@mui/material/Icon";
 import Divider from "@mui/material/Divider";
 
 // Material Dashboard 2 React components
-import MDBox from "components/MDBox";
-import MDTypography from "components/MDTypography";
-import MDAvatar from "components/MDAvatar";
+import MDBox from "../../../../../../components/MDBox";
+import MDTypography from "../../../../../../components/MDTypography";
+import MDAvatar from "../../../../../../components/MDAvatar";
 
 // Material Dashboard 2 React base styles
-import breakpoints from "assets/theme/base/breakpoints";
+import breakpoints from "../../../../../../assets/theme/base/breakpoints";
 
 // Images
-import defaultAvatar from "assets/images/sabrine2.jpg";
-import backgroundImage from "assets/images/bg-profile.jpeg";
+import defaultAvatar from "../../../../../../assets/images/default-avatar.jpg";
+import backgroundImage from "../../../../../../assets/images/bg-profile.jpeg";
 
 function Header({ children }) {
   const { user } = useAuth();
@@ -129,12 +129,10 @@ function Header({ children }) {
   );
 }
 
-// Setting default props for the Header
 Header.defaultProps = {
   children: "",
 };
 
-// Typechecking props for the Header
 Header.propTypes = {
   children: PropTypes.node,
 };

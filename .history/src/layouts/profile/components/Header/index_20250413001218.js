@@ -1,6 +1,5 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
-import { useAuth } from "authContext";
 
 // @mui material components
 import Card from "@mui/material/Card";
@@ -9,14 +8,13 @@ import AppBar from "@mui/material/AppBar";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Icon from "@mui/material/Icon";
-import Divider from "@mui/material/Divider";
 
 // Material Dashboard 2 React components
 import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
 import MDAvatar from "components/MDAvatar";
 
-// Material Dashboard 2 React base styles
+// Base styles
 import breakpoints from "assets/theme/base/breakpoints";
 
 // Images
@@ -24,15 +22,13 @@ import defaultAvatar from "assets/images/sabrine2.jpg";
 import backgroundImage from "assets/images/bg-profile.jpeg";
 
 function Header({ children }) {
-  const { user } = useAuth();
   const [tabsOrientation, setTabsOrientation] = useState("horizontal");
   const [tabValue, setTabValue] = useState(0);
+  const user = JSON.parse(localStorage.getItem("user"));
 
   useEffect(() => {
     function handleTabsOrientation() {
-      return window.innerWidth < breakpoints.values.sm
-        ? setTabsOrientation("vertical")
-        : setTabsOrientation("horizontal");
+      setTabsOrientation(window.innerWidth < breakpoints.values.sm ? "vertical" : "horizontal");
     }
 
     window.addEventListener("resize", handleTabsOrientation);
@@ -73,12 +69,7 @@ function Header({ children }) {
       >
         <Grid container spacing={3} alignItems="center">
           <Grid item>
-            <MDAvatar
-              src={user?.avatar || defaultAvatar}
-              alt="profile-image"
-              size="xl"
-              shadow="sm"
-            />
+            <MDAvatar src={defaultAvatar} alt="profile-image" size="xl" shadow="sm" />
           </Grid>
           <Grid item>
             <MDBox height="100%" mt={0.5} lineHeight={1}>
@@ -86,39 +77,16 @@ function Header({ children }) {
                 {user?.name || "Utilisateur"}
               </MDTypography>
               <MDTypography variant="button" color="text" fontWeight="regular">
-                {user?.filiere && user?.groupe
-                  ? `${user.filiere} - Groupe ${user.groupe}`
-                  : "Étudiant"}
+                {user?.filiere ? `${user.filiere} - Groupe ${user.groupe}` : "Étudiant"}
               </MDTypography>
             </MDBox>
           </Grid>
           <Grid item xs={12} md={6} lg={4} sx={{ ml: "auto" }}>
             <AppBar position="static">
               <Tabs orientation={tabsOrientation} value={tabValue} onChange={handleSetTabValue}>
-                <Tab
-                  label="Profil"
-                  icon={
-                    <Icon fontSize="small" sx={{ mt: -0.25 }}>
-                      person
-                    </Icon>
-                  }
-                />
-                <Tab
-                  label="Notifications"
-                  icon={
-                    <Icon fontSize="small" sx={{ mt: -0.25 }}>
-                      notifications
-                    </Icon>
-                  }
-                />
-                <Tab
-                  label="Paramètres"
-                  icon={
-                    <Icon fontSize="small" sx={{ mt: -0.25 }}>
-                      settings
-                    </Icon>
-                  }
-                />
+                <Tab label="Profil" icon={<Icon fontSize="small">person</Icon>} />
+                <Tab label="Notifications" icon={<Icon fontSize="small">notifications</Icon>} />
+                <Tab label="Paramètres" icon={<Icon fontSize="small">settings</Icon>} />
               </Tabs>
             </AppBar>
           </Grid>
@@ -129,12 +97,10 @@ function Header({ children }) {
   );
 }
 
-// Setting default props for the Header
 Header.defaultProps = {
   children: "",
 };
 
-// Typechecking props for the Header
 Header.propTypes = {
   children: PropTypes.node,
 };

@@ -10,6 +10,7 @@ import EmploiDuTemps from "layouts/tables";
 // @mui icons
 import Icon from "@mui/material/Icon";
 import DocumentList from "layouts/documents/DocumentList";
+import { Logout } from "@mui/icons-material";
 
 const routes = [
   {
@@ -63,7 +64,7 @@ const routes = [
     key: "sign-in",
     icon: <Icon fontSize="small">login</Icon>,
     route: "/authentication/sign-in",
-    component: <SignIn />,
+    component: <Logout />,
     protected: false,
   },
   {

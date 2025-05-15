@@ -1,11 +1,19 @@
 import React, { useState, useEffect } from "react";
 import { Box, Card, Grid, Typography, CircularProgress, Alert, Button } from "@mui/material";
 import axios from "axios";
+import DocumentUpload from "./DocumentUpload";
 
 const DocumentList = () => {
   const [documents, setDocuments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [uploadOpen, setUploadOpen] = useState(false);
+
+  const documentTypes = {
+    releve_notes: "Relevé de notes",
+    attestation: "Attestation de présence",
+    certificat: "Certificat",
+  };
 
   useEffect(() => {
     fetchDocuments();
@@ -51,19 +59,19 @@ const DocumentList = () => {
   };
 
   const getTypeLabel = (type) => {
-    const types = {
-      releve_notes: "Relevé de notes",
-      attestation: "Attestation de présence",
-      certificat: "Certificat",
-    };
-    return types[type] || type;
+    return documentTypes[type] || type;
   };
 
   return (
     <Box sx={{ p: 3 }}>
-      <Typography variant="h4" gutterBottom>
-        Mes Documents
-      </Typography>
+      <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 3 }}>
+        <Typography variant="h4" gutterBottom>
+          Mes Documents
+        </Typography>
+        <Button variant="contained" color="primary" onClick={() => setUploadOpen(true)}>
+          Ajouter un Document
+        </Button>
+      </Box>
 
       {loading ? (
         <CircularProgress />
@@ -98,6 +106,13 @@ const DocumentList = () => {
           ))}
         </Grid>
       )}
+
+      <DocumentUpload
+        open={uploadOpen}
+        onClose={() => setUploadOpen(false)}
+        types={documentTypes}
+        refresh={fetchDocuments}
+      />
     </Box>
   );
 };

@@ -40,7 +40,7 @@ const DocumentUpload = ({ open, onClose, types, refresh }) => {
       formData.append("file", form.file);
 
       const token = localStorage.getItem("access_token");
-      await axios.post("/api/documents", formData, {
+      await axios.post("http://localhost:8000/api/documents", formData, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "multipart/form-data",
@@ -50,6 +50,7 @@ const DocumentUpload = ({ open, onClose, types, refresh }) => {
       refresh();
       onClose();
       setForm({ type: "", title: "", file: null });
+      setError("");
     } catch (err) {
       setError(err.response?.data?.message || "Erreur lors de l'envoi");
     } finally {

@@ -17,10 +17,12 @@ const DocumentList = () => {
       const response = await axios.get("http://localhost:8000/api/documents", {
         headers: { Authorization: `Bearer ${token}` },
       });
-      setDocuments(response.data.documents);
+
+      // Modification ici pour utiliser response.data.data
+      setDocuments(response.data.data || []);
     } catch (err) {
-      setError("Erreur lors du chargement des documents");
-      console.error(err);
+      setError(err.response?.data?.message || "Erreur lors du chargement des documents");
+      console.error("Erreur détaillée:", err.response);
     } finally {
       setLoading(false);
     }

@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import React, { useState, useEffect } from "react";
 import { Box, Card, Grid, Typography, CircularProgress, Alert, Button } from "@mui/material";
 import axios from "axios";
@@ -37,6 +38,7 @@ const DocumentList = () => {
         }
       );
 
+      // Créer un lien de téléchargement
       const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement("a");
       link.href = url;
@@ -89,6 +91,12 @@ const DocumentList = () => {
                     variant="contained"
                     fullWidth
                     onClick={() => handleDownload(doc.id, doc.title)}
+                    sx={{
+                      backgroundColor: "#1976d2",
+                      "&:hover": {
+                        backgroundColor: "#1565c0",
+                      },
+                    }}
                   >
                     Télécharger PDF
                   </Button>

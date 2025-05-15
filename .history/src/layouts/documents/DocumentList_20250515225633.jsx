@@ -1,5 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { Box, Card, Grid, Typography, CircularProgress, Alert, Button } from "@mui/material";
+import { 
+  Box, 
+  Card, 
+  Grid, 
+  Typography, 
+  CircularProgress, 
+  Alert, 
+  Button 
+} from "@mui/material";
 import axios from "axios";
 
 const DocumentList = () => {
@@ -37,6 +45,7 @@ const DocumentList = () => {
         }
       );
 
+      // Créer un lien de téléchargement
       const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement("a");
       link.href = url;
@@ -77,7 +86,9 @@ const DocumentList = () => {
             <Grid item xs={12} md={6} lg={4} key={doc.id}>
               <Card sx={{ p: 2, height: "100%" }}>
                 <Typography variant="h6">{doc.title}</Typography>
-                <Typography color="text.secondary">Type: {getTypeLabel(doc.type)}</Typography>
+                <Typography color="text.secondary">
+                  Type: {getTypeLabel(doc.type)}
+                </Typography>
                 <Typography color="text.secondary">
                   Ajouté le: {new Date(doc.created_at).toLocaleDateString()}
                 </Typography>
@@ -89,6 +100,12 @@ const DocumentList = () => {
                     variant="contained"
                     fullWidth
                     onClick={() => handleDownload(doc.id, doc.title)}
+                    sx={{
+                      backgroundColor: '#1976d2',
+                      '&:hover': {
+                        backgroundColor: '#1565c0'
+                      }
+                    }}
                   >
                     Télécharger PDF
                   </Button>

@@ -37,6 +37,7 @@ const DocumentList = () => {
         }
       );
 
+      // Créer un lien de téléchargement
       const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement("a");
       link.href = url;
@@ -80,9 +81,6 @@ const DocumentList = () => {
                 <Typography color="text.secondary">Type: {getTypeLabel(doc.type)}</Typography>
                 <Typography color="text.secondary">
                   Ajouté le: {new Date(doc.created_at).toLocaleDateString()}
-                </Typography>
-                <Typography color="text.secondary">
-                  Taille: {(doc.file_size / 1024).toFixed(2)} KB
                 </Typography>
                 <Box sx={{ mt: 2 }}>
                   <Button

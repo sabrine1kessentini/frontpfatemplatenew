@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useMaterialUIController } from "context";
 import { useNavigate } from "react-router-dom";
@@ -22,7 +22,7 @@ function Notifications() {
   useEffect(() => {
     const fetchNotifications = async () => {
       try {
-        const response = await axios.get("http://127.0.0.1:8000/api/notifications", {
+        const response = await axios.get("http://localhost:8000/api/notifications", {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("access_token")}`,
           },

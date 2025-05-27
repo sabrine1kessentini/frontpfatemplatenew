@@ -17,11 +17,10 @@ const DocumentList = () => {
       const response = await axios.get("http://localhost:8000/api/documents", {
         headers: { Authorization: `Bearer ${token}` },
       });
-      console.log("Documents reçus:", response.data.data);
       setDocuments(response.data.data || []);
     } catch (err) {
       setError("Erreur lors du chargement des documents");
-      console.error("Erreur de chargement:", err);
+      console.error(err);
     } finally {
       setLoading(false);
     }
@@ -35,6 +34,7 @@ const DocumentList = () => {
         return;
       }
 
+      // Utiliser fetch au lieu d'axios pour un meilleur contrôle du téléchargement
       const response = await fetch(`http://localhost:8000/api/documents/${documentId}/download`, {
         method: "GET",
         headers: {
@@ -60,20 +60,6 @@ const DocumentList = () => {
       // Nettoyer
       document.body.removeChild(link);
       window.URL.revokeObjectURL(url);
-
-      // Envoyer une notification de téléchargement
-      await axios.post(
-        "http://localhost:8000/api/notifications",
-        {
-          message: `Vous avez téléchargé le document: ${documentTitle}`,
-          type: "document_download",
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
     } catch (error) {
       console.error("Erreur lors du téléchargement:", error);
       if (error.message.includes("401")) {
@@ -122,19 +108,26 @@ const DocumentList = () => {
                 <Typography color="text.secondary">
                   Taille: {(doc.file_size / 1024).toFixed(2)} KB
                 </Typography>
+                <Typography
+                  color={doc.isverified ? "success.main" : "warning.main"}
+                  sx={{ mt: 1, mb: 1 }}
+                >
+                  {doc.isverified ? "Document vérifié" : "Document en attente de vérification"}
+                </Typography>
                 <Box sx={{ mt: 2 }}>
                   <Button
                     variant="contained"
                     fullWidth
                     onClick={() => handleDownload(doc.id, doc.title)}
+                    disabled={!doc.isverified}
                     sx={{
-                      bgcolor: "primary.main",
+                      bgcolor: doc.isverified ? "primary.main" : "grey.500",
                       "&:hover": {
-                        bgcolor: "primary.dark",
+                        bgcolor: doc.isverified ? "primary.dark" : "grey.600",
                       },
                     }}
                   >
-                    Télécharger PDF
+                    {doc.isverified ? "Télécharger PDF" : "Document en attente de vérification"}
                   </Button>
                 </Box>
               </Card>

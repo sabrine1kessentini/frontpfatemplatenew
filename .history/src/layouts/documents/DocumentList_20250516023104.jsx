@@ -17,11 +17,10 @@ const DocumentList = () => {
       const response = await axios.get("http://localhost:8000/api/documents", {
         headers: { Authorization: `Bearer ${token}` },
       });
-      console.log("Documents reçus:", response.data.data);
       setDocuments(response.data.data || []);
     } catch (err) {
       setError("Erreur lors du chargement des documents");
-      console.error("Erreur de chargement:", err);
+      console.error(err);
     } finally {
       setLoading(false);
     }
@@ -30,27 +29,16 @@ const DocumentList = () => {
   const handleDownload = async (documentId, documentTitle) => {
     try {
       const token = localStorage.getItem("access_token");
-      if (!token) {
-        setError("Vous devez être connecté pour télécharger des documents");
-        return;
-      }
-
-      const response = await fetch(`http://localhost:8000/api/documents/${documentId}/download`, {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      // Obtenir le blob directement de la réponse
-      const blob = await response.blob();
+      const response = await axios.get(
+        `http://localhost:8000/api/documents/${documentId}/download`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+          responseType: "blob",
+        }
+      );
 
       // Créer un lien de téléchargement
-      const url = window.URL.createObjectURL(blob);
+      const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement("a");
       link.href = url;
       link.setAttribute("download", `${documentTitle}.pdf`);
@@ -58,33 +46,11 @@ const DocumentList = () => {
       link.click();
 
       // Nettoyer
-      document.body.removeChild(link);
+      link.parentNode.removeChild(link);
       window.URL.revokeObjectURL(url);
-
-      // Envoyer une notification de téléchargement
-      await axios.post(
-        "http://localhost:8000/api/notifications",
-        {
-          message: `Vous avez téléchargé le document: ${documentTitle}`,
-          type: "document_download",
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
     } catch (error) {
       console.error("Erreur lors du téléchargement:", error);
-      if (error.message.includes("401")) {
-        setError("Session expirée. Veuillez vous reconnecter.");
-      } else if (error.message.includes("404")) {
-        setError("Le document n'a pas été trouvé.");
-      } else if (error.message.includes("403")) {
-        setError("Vous n'avez pas les droits pour télécharger ce document.");
-      } else {
-        setError("Impossible de télécharger le document. Veuillez réessayer plus tard.");
-      }
+      setError("Erreur lors du téléchargement du document");
     }
   };
 
@@ -127,12 +93,6 @@ const DocumentList = () => {
                     variant="contained"
                     fullWidth
                     onClick={() => handleDownload(doc.id, doc.title)}
-                    sx={{
-                      bgcolor: "primary.main",
-                      "&:hover": {
-                        bgcolor: "primary.dark",
-                      },
-                    }}
                   >
                     Télécharger PDF
                   </Button>

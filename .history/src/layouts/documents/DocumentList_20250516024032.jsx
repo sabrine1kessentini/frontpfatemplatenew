@@ -17,11 +17,10 @@ const DocumentList = () => {
       const response = await axios.get("http://localhost:8000/api/documents", {
         headers: { Authorization: `Bearer ${token}` },
       });
-      console.log("Documents reçus:", response.data.data);
       setDocuments(response.data.data || []);
     } catch (err) {
       setError("Erreur lors du chargement des documents");
-      console.error("Erreur de chargement:", err);
+      console.error(err);
     } finally {
       setLoading(false);
     }
@@ -35,6 +34,7 @@ const DocumentList = () => {
         return;
       }
 
+      // Utiliser fetch au lieu d'axios pour un meilleur contrôle du téléchargement
       const response = await fetch(`http://localhost:8000/api/documents/${documentId}/download`, {
         method: "GET",
         headers: {
@@ -60,20 +60,6 @@ const DocumentList = () => {
       // Nettoyer
       document.body.removeChild(link);
       window.URL.revokeObjectURL(url);
-
-      // Envoyer une notification de téléchargement
-      await axios.post(
-        "http://localhost:8000/api/notifications",
-        {
-          message: `Vous avez téléchargé le document: ${documentTitle}`,
-          type: "document_download",
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
     } catch (error) {
       console.error("Erreur lors du téléchargement:", error);
       if (error.message.includes("401")) {
@@ -127,12 +113,6 @@ const DocumentList = () => {
                     variant="contained"
                     fullWidth
                     onClick={() => handleDownload(doc.id, doc.title)}
-                    sx={{
-                      bgcolor: "primary.main",
-                      "&:hover": {
-                        bgcolor: "primary.dark",
-                      },
-                    }}
                   >
                     Télécharger PDF
                   </Button>

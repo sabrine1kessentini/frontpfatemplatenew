@@ -17,11 +17,10 @@ const DocumentList = () => {
       const response = await axios.get("http://localhost:8000/api/documents", {
         headers: { Authorization: `Bearer ${token}` },
       });
-      console.log("Documents reçus:", response.data.data);
       setDocuments(response.data.data || []);
     } catch (err) {
       setError("Erreur lors du chargement des documents");
-      console.error("Erreur de chargement:", err);
+      console.error(err);
     } finally {
       setLoading(false);
     }
@@ -35,21 +34,23 @@ const DocumentList = () => {
         return;
       }
 
-      const response = await fetch(`http://localhost:8000/api/documents/${documentId}/download`, {
+      const response = await axios({
         method: "GET",
+        url: `http://localhost:8000/api/documents/${documentId}/download`,
         headers: {
           Authorization: `Bearer ${token}`,
+          "Content-Type": "application/pdf",
         },
+        responseType: "blob",
       });
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+      // Vérifier si la réponse est valide
+      if (!response.data || response.data.size === 0) {
+        throw new Error("Le fichier est vide");
       }
 
-      // Obtenir le blob directement de la réponse
-      const blob = await response.blob();
-
       // Créer un lien de téléchargement
+      const blob = new Blob([response.data], { type: "application/pdf" });
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = url;
@@ -60,30 +61,29 @@ const DocumentList = () => {
       // Nettoyer
       document.body.removeChild(link);
       window.URL.revokeObjectURL(url);
-
-      // Envoyer une notification de téléchargement
-      await axios.post(
-        "http://localhost:8000/api/notifications",
-        {
-          message: `Vous avez téléchargé le document: ${documentTitle}`,
-          type: "document_download",
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
     } catch (error) {
       console.error("Erreur lors du téléchargement:", error);
-      if (error.message.includes("401")) {
-        setError("Session expirée. Veuillez vous reconnecter.");
-      } else if (error.message.includes("404")) {
-        setError("Le document n'a pas été trouvé.");
-      } else if (error.message.includes("403")) {
-        setError("Vous n'avez pas les droits pour télécharger ce document.");
+      if (error.response) {
+        // Le serveur a répondu avec un code d'erreur
+        switch (error.response.status) {
+          case 401:
+            setError("Session expirée. Veuillez vous reconnecter.");
+            break;
+          case 404:
+            setError("Le document n'a pas été trouvé.");
+            break;
+          case 403:
+            setError("Vous n'avez pas les droits pour télécharger ce document.");
+            break;
+          default:
+            setError(`Erreur serveur: ${error.response.status}`);
+        }
+      } else if (error.request) {
+        // La requête a été faite mais pas de réponse
+        setError("Le serveur ne répond pas. Veuillez vérifier votre connexion.");
       } else {
-        setError("Impossible de télécharger le document. Veuillez réessayer plus tard.");
+        // Erreur lors de la configuration de la requête
+        setError("Erreur lors du téléchargement: " + error.message);
       }
     }
   };
@@ -127,12 +127,6 @@ const DocumentList = () => {
                     variant="contained"
                     fullWidth
                     onClick={() => handleDownload(doc.id, doc.title)}
-                    sx={{
-                      bgcolor: "primary.main",
-                      "&:hover": {
-                        bgcolor: "primary.dark",
-                      },
-                    }}
                   >
                     Télécharger PDF
                   </Button>

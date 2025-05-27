@@ -35,6 +35,7 @@ const DocumentList = () => {
         return;
       }
 
+      // Utiliser fetch au lieu d'axios pour un meilleur contrôle du téléchargement
       const response = await fetch(`http://localhost:8000/api/documents/${documentId}/download`, {
         method: "GET",
         headers: {
@@ -60,20 +61,6 @@ const DocumentList = () => {
       // Nettoyer
       document.body.removeChild(link);
       window.URL.revokeObjectURL(url);
-
-      // Envoyer une notification de téléchargement
-      await axios.post(
-        "http://localhost:8000/api/notifications",
-        {
-          message: `Vous avez téléchargé le document: ${documentTitle}`,
-          type: "document_download",
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
     } catch (error) {
       console.error("Erreur lors du téléchargement:", error);
       if (error.message.includes("401")) {
@@ -111,35 +98,52 @@ const DocumentList = () => {
         <Alert severity="info">Aucun document disponible</Alert>
       ) : (
         <Grid container spacing={3}>
-          {documents.map((doc) => (
-            <Grid item xs={12} md={6} lg={4} key={doc.id}>
-              <Card sx={{ p: 2, height: "100%" }}>
-                <Typography variant="h6">{doc.title}</Typography>
-                <Typography color="text.secondary">Type: {getTypeLabel(doc.type)}</Typography>
-                <Typography color="text.secondary">
-                  Ajouté le: {new Date(doc.created_at).toLocaleDateString()}
-                </Typography>
-                <Typography color="text.secondary">
-                  Taille: {(doc.file_size / 1024).toFixed(2)} KB
-                </Typography>
-                <Box sx={{ mt: 2 }}>
-                  <Button
-                    variant="contained"
-                    fullWidth
-                    onClick={() => handleDownload(doc.id, doc.title)}
-                    sx={{
-                      bgcolor: "primary.main",
-                      "&:hover": {
-                        bgcolor: "primary.dark",
-                      },
-                    }}
+          {documents.map((doc) => {
+            const isVerified = Boolean(Number(doc.isverified));
+            console.log(
+              `Document ${doc.id} - isverified:`,
+              doc.isverified,
+              "converted:",
+              isVerified
+            );
+
+            return (
+              <Grid item xs={12} md={6} lg={4} key={doc.id}>
+                <Card sx={{ p: 2, height: "100%" }}>
+                  <Typography variant="h6">{doc.title}</Typography>
+                  <Typography color="text.secondary">Type: {getTypeLabel(doc.type)}</Typography>
+                  <Typography color="text.secondary">
+                    Ajouté le: {new Date(doc.created_at).toLocaleDateString()}
+                  </Typography>
+                  <Typography color="text.secondary">
+                    Taille: {(doc.file_size / 1024).toFixed(2)} KB
+                  </Typography>
+                  <Typography
+                    color={isVerified ? "success.main" : "warning.main"}
+                    sx={{ mt: 1, mb: 1 }}
                   >
-                    Télécharger PDF
-                  </Button>
-                </Box>
-              </Card>
-            </Grid>
-          ))}
+                    {isVerified ? "Document vérifié" : "Document en attente de vérification"}
+                  </Typography>
+                  <Box sx={{ mt: 2 }}>
+                    <Button
+                      variant="contained"
+                      fullWidth
+                      onClick={() => handleDownload(doc.id, doc.title)}
+                      disabled={!isVerified}
+                      sx={{
+                        bgcolor: isVerified ? "primary.main" : "grey.500",
+                        "&:hover": {
+                          bgcolor: isVerified ? "primary.dark" : "grey.600",
+                        },
+                      }}
+                    >
+                      {isVerified ? "Télécharger PDF" : "Document en attente de vérification"}
+                    </Button>
+                  </Box>
+                </Card>
+              </Grid>
+            );
+          })}
         </Grid>
       )}
     </Box>

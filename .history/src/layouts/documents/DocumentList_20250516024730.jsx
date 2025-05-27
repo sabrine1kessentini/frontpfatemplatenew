@@ -35,6 +35,7 @@ const DocumentList = () => {
         return;
       }
 
+      // Utiliser fetch au lieu d'axios pour un meilleur contrôle du téléchargement
       const response = await fetch(`http://localhost:8000/api/documents/${documentId}/download`, {
         method: "GET",
         headers: {
@@ -60,20 +61,6 @@ const DocumentList = () => {
       // Nettoyer
       document.body.removeChild(link);
       window.URL.revokeObjectURL(url);
-
-      // Envoyer une notification de téléchargement
-      await axios.post(
-        "http://localhost:8000/api/notifications",
-        {
-          message: `Vous avez téléchargé le document: ${documentTitle}`,
-          type: "document_download",
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
     } catch (error) {
       console.error("Erreur lors du téléchargement:", error);
       if (error.message.includes("401")) {

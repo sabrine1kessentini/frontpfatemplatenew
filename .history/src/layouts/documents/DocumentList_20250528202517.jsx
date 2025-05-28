@@ -37,8 +37,6 @@ const DocumentList = () => {
         return;
       }
 
-      setError(null); // Réinitialiser les erreurs précédentes
-
       const response = await fetch(`http://localhost:8000/api/documents/${documentId}/download`, {
         method: "GET",
         headers: {
@@ -48,28 +46,12 @@ const DocumentList = () => {
       });
 
       if (!response.ok) {
-        const contentType = response.headers.get("content-type");
-        if (contentType && contentType.includes("application/json")) {
-          const errorData = await response.json();
-          console.error("Erreur détaillée:", errorData);
-          throw new Error(
-            errorData.error || errorData.message || `Erreur HTTP: ${response.status}`
-          );
-        } else {
-          throw new Error(`Erreur HTTP: ${response.status}`);
-        }
+        const errorData = await response.text();
+        throw new Error(errorData || `Erreur HTTP: ${response.status}`);
       }
 
       const blob = await response.blob();
-      if (blob.size === 0) {
-        throw new Error("Le fichier téléchargé est vide");
-      }
-
-      // Vérifier le type MIME
-      if (!blob.type.includes("pdf")) {
-        console.warn("Type MIME reçu:", blob.type);
-        throw new Error("Le fichier téléchargé n'est pas un PDF valide");
-      }
+      if (blob.size === 0) throw new Error("Le fichier téléchargé est vide");
 
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement("a");
@@ -79,19 +61,11 @@ const DocumentList = () => {
       link.click();
       document.body.removeChild(link);
       window.URL.revokeObjectURL(url);
-
-      // Afficher un message de succès
-      setError(null);
     } catch (error) {
-      console.error("Erreur de téléchargement:", error);
       if (error.message.includes("401")) {
         setError("Session expirée. Veuillez vous reconnecter.");
       } else if (error.message.includes("404")) {
         setError("Le document n'a pas été trouvé.");
-      } else if (error.message.includes("403")) {
-        setError("Vous n'avez pas les droits pour accéder à ce document.");
-      } else if (error.message.includes("500")) {
-        setError("Erreur serveur. Veuillez réessayer plus tard ou contacter l'administrateur.");
       } else {
         setError(error.message || "Impossible de télécharger le document.");
       }

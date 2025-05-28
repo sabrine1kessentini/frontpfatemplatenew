@@ -131,7 +131,7 @@ function Dashboard() {
             left: "50%",
             transform: "translate(-50%, -50%)",
             textAlign: "center",
-            color: "white", // Couleur globale pour tout le contenu
+            color: "white",
             width: "100%",
             padding: "0 20px",
             textShadow: "2px 2px 4px rgba(0,0,0,0.5)",
@@ -142,7 +142,8 @@ function Dashboard() {
             sx={{
               mb: 2,
               fontWeight: "bold",
-              color: "white", // Explicitement défini en blanc
+              color: "white",
+              fontSize: { xs: "2rem", md: "3rem" },
             }}
           >
             Bienvenue {user?.name}
@@ -150,7 +151,9 @@ function Dashboard() {
           <Typography
             variant="h5"
             sx={{
-              color: "white", // Explicitement défini en blanc
+              color: "white",
+              fontSize: { xs: "1.2rem", md: "1.5rem" },
+              fontWeight: "medium",
             }}
           >
             Votre portail étudiant pour une expérience universitaire enrichissante

@@ -6,7 +6,6 @@ import Profile from "layouts/profile";
 import SignIn from "layouts/authentication/sign-in";
 import SignUp from "layouts/authentication/sign-up";
 import EmploiDuTemps from "layouts/tables";
-import PrivateRoute from "components/PrivateRoute";
 
 // @mui icons
 import Icon from "@mui/material/Icon";
@@ -16,7 +15,7 @@ import Notes from "layouts/notes";
 const routes = [
   {
     type: "collapse",
-    name: "Accueil",
+    name: "Dashboard",
     key: "dashboard",
     icon: <Icon fontSize="small">dashboard</Icon>,
     route: "/dashboard",
@@ -63,14 +62,10 @@ const routes = [
     type: "collapse",
     name: "Notes",
     key: "notes",
-    icon: <Icon fontSize="small">grade</Icon>,
+    icon: <Icon fontSize="small">grade</Icon>, // Icône "notes"
     route: "/notes",
-    component: (
-      <PrivateRoute>
-        <Notes />
-      </PrivateRoute>
-    ),
-    protected: true,
+    component: <Notes />,
+    protected: true, // Si l'accès nécessite une authentification
   },
   {
     type: "collapse",

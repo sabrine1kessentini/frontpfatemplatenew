@@ -51,7 +51,6 @@ const DocumentList = () => {
         const contentType = response.headers.get("content-type");
         if (contentType && contentType.includes("application/json")) {
           const errorData = await response.json();
-          console.error("Erreur détaillée:", errorData);
           throw new Error(
             errorData.error || errorData.message || `Erreur HTTP: ${response.status}`
           );
@@ -67,7 +66,6 @@ const DocumentList = () => {
 
       // Vérifier le type MIME
       if (!blob.type.includes("pdf")) {
-        console.warn("Type MIME reçu:", blob.type);
         throw new Error("Le fichier téléchargé n'est pas un PDF valide");
       }
 
@@ -90,8 +88,6 @@ const DocumentList = () => {
         setError("Le document n'a pas été trouvé.");
       } else if (error.message.includes("403")) {
         setError("Vous n'avez pas les droits pour accéder à ce document.");
-      } else if (error.message.includes("500")) {
-        setError("Erreur serveur. Veuillez réessayer plus tard ou contacter l'administrateur.");
       } else {
         setError(error.message || "Impossible de télécharger le document.");
       }

@@ -12,42 +12,13 @@ function Invoices() {
   useEffect(() => {
     const fetchPayments = async () => {
       try {
-        const token = localStorage.getItem("access_token");
-        console.log("Token:", token);
-
-        if (!token) {
-          console.error("Aucun token trouvé dans le localStorage");
-          setLoading(false);
-          return;
-        }
-
-        const response = await axios.get("http://127.0.0.1:8000/api/payments", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-            Accept: "application/json",
-          },
+        const token = localStorage.getItem("token");
+        const response = await axios.get("/api/payments", {
+          headers: { Authorization: `Bearer ${token}` },
         });
-
-        console.log("Response complète:", response);
-        console.log("Response data:", response.data);
-
-        if (response.data && response.data.data) {
-          setPayments(response.data.data);
-        } else {
-          console.error("Format de réponse invalide:", response.data);
-        }
+        setPayments(response.data.data);
       } catch (error) {
         console.error("Erreur lors de la récupération des paiements:", error);
-        if (error.response) {
-          console.error("Status:", error.response.status);
-          console.error("Headers:", error.response.headers);
-          console.error("Data:", error.response.data);
-        } else if (error.request) {
-          console.error("Pas de réponse reçue:", error.request);
-        } else {
-          console.error("Erreur de configuration:", error.message);
-        }
       } finally {
         setLoading(false);
       }
@@ -75,7 +46,7 @@ function Invoices() {
                 key={payment.id}
                 date={new Date(payment.created_at).toLocaleDateString("fr-FR")}
                 id={`#PY-${payment.id}`}
-                amount={`${payment.amount} Dt`}
+                amount={`${payment.amount} DH`}
                 mode={payment.payment_mode}
                 status={payment.status}
               />

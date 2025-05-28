@@ -24,6 +24,7 @@ import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 
 // Billing page components
+import PaymentMethod from "layouts/billing/components/PaymentMethod";
 import Invoices from "layouts/billing/components/Invoices";
 
 function Billing() {
@@ -33,7 +34,14 @@ function Billing() {
       <MDBox mt={8}>
         <MDBox mb={3}>
           <Grid container spacing={3}>
-            <Grid item xs={12} lg={12}>
+            <Grid item xs={12} lg={8}>
+              <Grid container spacing={3}>
+                <Grid item xs={12}>
+                  <PaymentMethod />
+                </Grid>
+              </Grid>
+            </Grid>
+            <Grid item xs={12} lg={4}>
               <Invoices />
             </Grid>
           </Grid>

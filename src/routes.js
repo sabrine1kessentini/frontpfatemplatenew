@@ -32,7 +32,7 @@ const routes = [
   },
   {
     type: "collapse",
-    name: "Billing",
+    name: "Paiement",
     key: "billing",
     icon: <Icon fontSize="small">receipt_long</Icon>,
     route: "/billing",
@@ -59,21 +59,21 @@ const routes = [
   },
   {
     type: "collapse",
+    name: "Documents",
+    key: "documents",
+    icon: <Icon fontSize="small">description</Icon>,
+    route: "/documents",
+    component: <DocumentList />,
+    protected: true,
+  },
+  {
+    type: "collapse",
     name: "Logout",
     key: "sign-in",
     icon: <Icon fontSize="small">login</Icon>,
     route: "/authentication/sign-in",
     component: <SignIn />,
     protected: false,
-  },
-  {
-    type: "collapse",
-    name: "Documents",
-    key: "documents",
-    icon: <Icon fontSize="small">description</Icon>,
-    route: "/documents",
-    component: <DocumentList />,
-    protected: true, // Si besoin d'authentification
   },
 ];
 

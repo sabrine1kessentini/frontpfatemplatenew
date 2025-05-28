@@ -75,7 +75,7 @@ function Invoices() {
                 key={payment.id}
                 date={new Date(payment.created_at).toLocaleDateString("fr-FR")}
                 id={`#PY-${payment.id}`}
-                amount={`${payment.amount} Dt`}
+                amount={`${payment.amount} DH`}
                 mode={payment.payment_mode}
                 status={payment.status}
               />

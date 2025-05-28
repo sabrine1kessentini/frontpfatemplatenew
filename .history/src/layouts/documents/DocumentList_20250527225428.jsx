@@ -36,7 +36,6 @@ const DocumentList = () => {
       }
 
       setError(null); // Réinitialiser les erreurs précédentes
-      console.log("Début du téléchargement pour:", documentTitle);
 
       const response = await fetch(`http://localhost:8000/api/documents/${documentId}/download`, {
         method: "GET",
@@ -46,9 +45,6 @@ const DocumentList = () => {
         },
       });
 
-      console.log("Réponse reçue:", response.status, response.statusText);
-      console.log("Headers:", Object.fromEntries(response.headers.entries()));
-
       if (!response.ok) {
         const errorData = await response.text();
         console.error("Erreur serveur:", errorData);
@@ -57,16 +53,10 @@ const DocumentList = () => {
 
       // Obtenir le blob directement de la réponse
       const blob = await response.blob();
-      console.log("Blob reçu:", blob.size, "bytes");
 
       // Vérifier la taille du blob
       if (blob.size === 0) {
         throw new Error("Le fichier téléchargé est vide");
-      }
-
-      // Vérifier le type MIME
-      if (blob.type !== "application/pdf") {
-        console.warn("Type MIME inattendu:", blob.type);
       }
 
       // Créer un lien de téléchargement
@@ -75,15 +65,13 @@ const DocumentList = () => {
       link.href = url;
       link.setAttribute("download", `${documentTitle}.pdf`);
       document.body.appendChild(link);
-      console.log("Déclenchement du téléchargement...");
       link.click();
 
       // Nettoyer
       document.body.removeChild(link);
       window.URL.revokeObjectURL(url);
-      console.log("Téléchargement terminé avec succès");
     } catch (error) {
-      console.error("Erreur détaillée lors du téléchargement:", error);
+      console.error("Erreur lors du téléchargement:", error);
       if (error.message.includes("401")) {
         setError("Session expirée. Veuillez vous reconnecter.");
       } else if (error.message.includes("404")) {

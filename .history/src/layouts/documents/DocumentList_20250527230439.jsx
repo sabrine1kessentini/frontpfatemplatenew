@@ -64,11 +64,6 @@ const DocumentList = () => {
         throw new Error("Le fichier téléchargé est vide");
       }
 
-      // Vérifier le type MIME
-      if (blob.type !== "application/pdf") {
-        console.warn("Type MIME inattendu:", blob.type);
-      }
-
       // Créer un lien de téléchargement
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement("a");
@@ -82,6 +77,7 @@ const DocumentList = () => {
       document.body.removeChild(link);
       window.URL.revokeObjectURL(url);
       console.log("Téléchargement terminé avec succès");
+      // eslint-disable-next-line prettier/prettier
     } catch (error) {
       console.error("Erreur détaillée lors du téléchargement:", error);
       if (error.message.includes("401")) {

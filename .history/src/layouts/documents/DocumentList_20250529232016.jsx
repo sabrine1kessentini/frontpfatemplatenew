@@ -47,29 +47,11 @@ const DocumentList = () => {
       });
 
       if (!response.ok) {
-        // Vérifier si la réponse est du JSON
-        const contentType = response.headers.get("content-type");
-        if (contentType && contentType.includes("application/json")) {
-          const errorData = await response.json();
-          throw new Error(errorData.error || `Erreur HTTP: ${response.status}`);
-        } else {
-          // Si ce n'est pas du JSON, c'est probablement une erreur serveur
-          throw new Error(`Erreur serveur: ${response.status}`);
-        }
-      }
-
-      // Vérifier si la réponse est bien un PDF
-      const contentType = response.headers.get("content-type");
-      if (!contentType || !contentType.includes("application/pdf")) {
-        throw new Error("Le fichier téléchargé n'est pas un PDF valide");
+        const errorData = await response.json();
+        throw new Error(errorData.error || `Erreur HTTP: ${response.status}`);
       }
 
       const blob = await response.blob();
-
-      // Vérifier si le blob n'est pas vide
-      if (blob.size === 0) {
-        throw new Error("Le fichier téléchargé est vide");
-      }
 
       // Créer un lien de téléchargement
       const url = window.URL.createObjectURL(blob);
@@ -90,8 +72,6 @@ const DocumentList = () => {
         setError("Le document n'a pas été trouvé.");
       } else if (error.message.includes("403")) {
         setError("Vous n'avez pas les droits pour accéder à ce document.");
-      } else if (error.message.includes("500")) {
-        setError("Erreur serveur. Veuillez réessayer plus tard.");
       } else {
         setError(error.message || "Impossible de télécharger le document.");
       }

@@ -242,7 +242,7 @@ function Notes() {
                       Moyenne
                     </MDTypography>
                     <MDTypography variant="h4" color="text">
-                      Pas encore disponible
+                      {stats.moyenne}/20
                     </MDTypography>
                   </MDBox>
                 </MDBox>

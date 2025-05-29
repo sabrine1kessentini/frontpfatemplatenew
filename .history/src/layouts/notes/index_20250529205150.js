@@ -355,14 +355,13 @@ function Notes() {
                                 </MDTypography>
                                 {note.commentaire && (
                                   <MDTypography
-                                    variant="body2"
+                                    variant="caption"
                                     color="text.secondary"
                                     sx={{
                                       fontStyle: "italic",
                                       mt: 0.5,
                                       lineHeight: 1.2,
                                       whiteSpace: "pre-wrap",
-                                      fontSize: "0.8rem",
                                     }}
                                   >
                                     {note.commentaire}

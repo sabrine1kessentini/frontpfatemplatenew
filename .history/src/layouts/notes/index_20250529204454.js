@@ -78,8 +78,8 @@ function Notes() {
     if (!notes.length) return { moyenne: 0, reussite: 0, echec: 0 };
 
     const moyenne = notes.reduce((acc, note) => acc + note.note, 0) / notes.length;
-    const reussite = notes.filter((note) => note.note >= 8).length;
-    const echec = notes.filter((note) => note.note < 8).length;
+    const reussite = notes.filter((note) => note.note >= 10).length;
+    const echec = notes.filter((note) => note.note < 10).length;
 
     return {
       moyenne: moyenne.toFixed(2),
@@ -201,7 +201,7 @@ function Notes() {
                       Moyenne
                     </MDTypography>
                     <MDTypography variant="h4" color="text">
-                      Pas encore disponible
+                      {stats.moyenne}/20
                     </MDTypography>
                   </MDBox>
                 </MDBox>
@@ -355,14 +355,13 @@ function Notes() {
                                 </MDTypography>
                                 {note.commentaire && (
                                   <MDTypography
-                                    variant="body2"
+                                    variant="caption"
                                     color="text.secondary"
                                     sx={{
                                       fontStyle: "italic",
                                       mt: 0.5,
                                       lineHeight: 1.2,
                                       whiteSpace: "pre-wrap",
-                                      fontSize: "0.8rem",
                                     }}
                                   >
                                     {note.commentaire}
@@ -381,7 +380,7 @@ function Notes() {
                                     borderRadius: 4,
                                     bgcolor: (theme) => alpha(theme.palette.info.main, 0.1),
                                     "& .MuiLinearProgress-bar": {
-                                      bgcolor: note.note >= 8 ? "success.main" : "error.main",
+                                      bgcolor: note.note >= 10 ? "success.main" : "error.main",
                                     },
                                   }}
                                 />
@@ -389,7 +388,7 @@ function Notes() {
                                   variant="body2"
                                   sx={{
                                     fontWeight: "bold",
-                                    color: note.note >= 8 ? "success.main" : "error.main",
+                                    color: note.note >= 10 ? "success.main" : "error.main",
                                   }}
                                 >
                                   {`${note.note}/20`}

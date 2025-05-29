@@ -324,7 +324,9 @@ function Notes() {
                     <Table>
                       <TableHead>
                         <TableRow sx={{ bgcolor: "info.main" }}>
-                          <TableCell sx={{ color: "white", fontWeight: "bold" }}>Matière</TableCell>
+                          <TableCell sx={{ color: "white", fontWeight: "bold" }}>
+                            Matière et Commentaire
+                          </TableCell>
                           <TableCell align="right" sx={{ color: "white", fontWeight: "bold" }}>
                             Note
                           </TableCell>
@@ -347,7 +349,7 @@ function Notes() {
                             <TableCell>
                               <Box sx={{ display: "flex", flexDirection: "column" }}>
                                 <MDTypography
-                                  variant="body2"
+                                  variant="body1"
                                   fontWeight="medium"
                                   color={darkMode ? "white" : "text"}
                                 >

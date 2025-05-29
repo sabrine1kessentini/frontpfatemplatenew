@@ -23,6 +23,8 @@ import { alpha } from "@mui/material/styles";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
 import Icon from "@mui/material/Icon";
 import LinearProgress from "@mui/material/LinearProgress";
+import Collapse from "@mui/material/Collapse";
+import IconButton from "@mui/material/IconButton";
 
 function Notes() {
   const [controller] = useMaterialUIController();
@@ -31,6 +33,7 @@ function Notes() {
   const [semestre, setSemestre] = useState("1");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [expandedNote, setExpandedNote] = useState(null);
   const navigate = useNavigate();
   const { user } = useAuth();
 
@@ -51,7 +54,9 @@ function Notes() {
         const response = await axios.get(`http://localhost:8000/api/notes?semestre=${semestre}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
-        setNotes(response.data);
+        // Trier les notes par matière
+        const sortedNotes = response.data.sort((a, b) => a.matiere.localeCompare(b.matiere));
+        setNotes(sortedNotes);
         setLoading(false);
       } catch (err) {
         setError(err.response?.data?.message || "Erreur lors du chargement des notes");
@@ -72,6 +77,10 @@ function Notes() {
 
   const handleSemestreClick = (selectedSemestre) => {
     setSemestre(selectedSemestre);
+  };
+
+  const handleExpandClick = (noteId) => {
+    setExpandedNote(expandedNote === noteId ? null : noteId);
   };
 
   const calculateStats = () => {
@@ -174,37 +183,6 @@ function Notes() {
                     </Box>
                   </Grid>
                 </Grid>
-              </MDBox>
-            </Card>
-          </Grid>
-
-          {/* Cartes de statistiques */}
-          <Grid item xs={12} md={4}>
-            <Card>
-              <MDBox p={3}>
-                <MDBox display="flex" alignItems="center">
-                  <MDBox
-                    display="flex"
-                    justifyContent="center"
-                    alignItems="center"
-                    width="4rem"
-                    height="4rem"
-                    borderRadius="lg"
-                    bgColor="info"
-                    color="white"
-                    mr={2}
-                  >
-                    <Icon fontSize="large">grade</Icon>
-                  </MDBox>
-                  <MDBox>
-                    <MDTypography variant="h6" color="text">
-                      Moyenne
-                    </MDTypography>
-                    <MDTypography variant="h4" color="text">
-                      Pas encore disponible
-                    </MDTypography>
-                  </MDBox>
-                </MDBox>
               </MDBox>
             </Card>
           </Grid>
@@ -329,79 +307,105 @@ function Notes() {
                             Note
                           </TableCell>
                           <TableCell sx={{ color: "white", fontWeight: "bold" }}>Date</TableCell>
+                          <TableCell sx={{ width: "50px" }} />
                         </TableRow>
                       </TableHead>
                       <TableBody>
                         {notes.map((note) => (
-                          <TableRow
-                            key={`${note.matiere}-${note.semestre}`}
-                            sx={{
-                              "&:nth-of-type(odd)": {
-                                bgcolor: (theme) => alpha(theme.palette.info.main, 0.05),
-                              },
-                              "&:hover": {
-                                bgcolor: (theme) => alpha(theme.palette.info.main, 0.1),
-                              },
-                            }}
-                          >
-                            <TableCell>
-                              <Box sx={{ display: "flex", flexDirection: "column" }}>
-                                <MDTypography
-                                  variant="body2"
-                                  fontWeight="medium"
-                                  color={darkMode ? "white" : "text"}
-                                >
+                          <React.Fragment key={`${note.matiere}-${note.semestre}`}>
+                            <TableRow
+                              sx={{
+                                "&:nth-of-type(odd)": {
+                                  bgcolor: (theme) => alpha(theme.palette.info.main, 0.05),
+                                },
+                                "&:hover": {
+                                  bgcolor: (theme) => alpha(theme.palette.info.main, 0.1),
+                                },
+                              }}
+                            >
+                              <TableCell>
+                                <MDTypography variant="body2" color={darkMode ? "white" : "text"}>
                                   {note.matiere}
                                 </MDTypography>
-                                {note.commentaire && (
+                              </TableCell>
+                              <TableCell align="right">
+                                <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                                  <LinearProgress
+                                    variant="determinate"
+                                    value={(note.note / 20) * 100}
+                                    sx={{
+                                      width: 100,
+                                      height: 8,
+                                      borderRadius: 4,
+                                      bgcolor: (theme) => alpha(theme.palette.info.main, 0.1),
+                                      "& .MuiLinearProgress-bar": {
+                                        bgcolor: note.note >= 8 ? "success.main" : "error.main",
+                                      },
+                                    }}
+                                  />
                                   <MDTypography
                                     variant="body2"
-                                    color="text.secondary"
                                     sx={{
-                                      fontStyle: "italic",
-                                      mt: 0.5,
-                                      lineHeight: 1.2,
-                                      whiteSpace: "pre-wrap",
-                                      fontSize: "0.8rem",
+                                      fontWeight: "bold",
+                                      color: note.note >= 8 ? "success.main" : "error.main",
                                     }}
                                   >
-                                    {note.commentaire}
+                                    {`${note.note}/20`}
                                   </MDTypography>
-                                )}
-                              </Box>
-                            </TableCell>
-                            <TableCell align="right">
-                              <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                                <LinearProgress
-                                  variant="determinate"
-                                  value={(note.note / 20) * 100}
-                                  sx={{
-                                    width: 100,
-                                    height: 8,
-                                    borderRadius: 4,
-                                    bgcolor: (theme) => alpha(theme.palette.info.main, 0.1),
-                                    "& .MuiLinearProgress-bar": {
-                                      bgcolor: note.note >= 8 ? "success.main" : "error.main",
-                                    },
-                                  }}
-                                />
-                                <MDTypography
-                                  variant="body2"
-                                  sx={{
-                                    fontWeight: "bold",
-                                    color: note.note >= 8 ? "success.main" : "error.main",
-                                  }}
-                                >
-                                  {`${note.note}/20`}
+                                </Box>
+                              </TableCell>
+                              <TableCell>
+                                <MDTypography variant="body2" color={darkMode ? "white" : "text"}>
+                                  {formatDate(note.created_at)}
                                 </MDTypography>
-                              </Box>
-                            </TableCell>
-                            <TableCell>
-                              <MDTypography variant="body2" color={darkMode ? "white" : "text"}>
-                                {formatDate(note.created_at)}
-                              </MDTypography>
-                            </TableCell>
-                          </TableRow>
+                              </TableCell>
+                              <TableCell>
+                                {note.commentaire && (
+                                  <IconButton
+                                    size="small"
+                                    onClick={() => handleExpandClick(note.id)}
+                                    sx={{
+                                      transform:
+                                        expandedNote === note.id
+                                          ? "rotate(180deg)"
+                                          : "rotate(0deg)",
+                                      transition: "transform 0.3s",
+                                    }}
+                                  >
+                                    <Icon>expand_more</Icon>
+                                  </IconButton>
+                                )}
+                              </TableCell>
+                            </TableRow>
+                            {note.commentaire && (
+                              <TableRow>
+                                <TableCell colSpan={4} sx={{ py: 0 }}>
+                                  <Collapse
+                                    in={expandedNote === note.id}
+                                    timeout="auto"
+                                    unmountOnExit
+                                  >
+                                    <MDBox
+                                      sx={{
+                                        p: 2,
+                                        bgcolor: (theme) => alpha(theme.palette.info.main, 0.05),
+                                        borderTop: 1,
+                                        borderColor: "divider",
+                                      }}
+                                    >
+                                      <MDTypography
+                                        variant="body2"
+                                        color={darkMode ? "white" : "text"}
+                                        sx={{ fontStyle: "italic" }}
+                                      >
+                                        {note.commentaire}
+                                      </MDTypography>
+                                    </MDBox>
+                                  </Collapse>
+                                </TableCell>
+                              </TableRow>
+                            )}
+                          </React.Fragment>
                         ))}
                       </TableBody>
                     </Table>

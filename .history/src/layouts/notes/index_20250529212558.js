@@ -347,7 +347,7 @@ function Notes() {
                             <TableCell>
                               <Box sx={{ display: "flex", flexDirection: "column" }}>
                                 <MDTypography
-                                  variant="body2"
+                                  variant="body1"
                                   fontWeight="medium"
                                   color={darkMode ? "white" : "text"}
                                 >

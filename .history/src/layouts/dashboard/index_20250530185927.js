@@ -1,3 +1,18 @@
+/**
+=========================================================
+* Material Dashboard 2 React - v2.2.0
+=========================================================
+
+* Product Page: https://www.creative-tim.com/product/material-dashboard-react
+* Copyright 2023 Creative Tim (https://www.creative-tim.com)
+
+Coded by www.creative-tim.com
+
+ =========================================================
+
+* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+*/
+
 import React from "react";
 import { useMaterialUIController } from "context";
 import { useAuth } from "authContext";
@@ -7,6 +22,8 @@ import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
 import Icon from "@mui/material/Icon";
 import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import { alpha } from "@mui/material/styles";
 
 // Material Dashboard 2 React components
 import MDBox from "components/MDBox";
@@ -16,6 +33,17 @@ import MDTypography from "components/MDTypography";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";
+import ReportsBarChart from "examples/Charts/BarCharts/ReportsBarChart";
+import ReportsLineChart from "examples/Charts/LineCharts/ReportsLineChart";
+import ComplexStatisticsCard from "examples/Cards/StatisticsCards/ComplexStatisticsCard";
+
+// Data
+import reportsBarChartData from "layouts/dashboard/data/reportsBarChartData";
+import reportsLineChartData from "layouts/dashboard/data/reportsLineChartData";
+
+// Dashboard components
+import Projects from "layouts/dashboard/components/Projects";
+import OrdersOverview from "layouts/dashboard/components/OrdersOverview";
 
 // Images
 import campusImage from "assets/images/campus.jpg";
@@ -103,17 +131,30 @@ function Dashboard() {
             left: "50%",
             transform: "translate(-50%, -50%)",
             textAlign: "center",
+            color: "white", // Couleur globale pour tout le contenu
             width: "100%",
-            px: 2,
+            padding: "0 20px",
             textShadow: "2px 2px 4px rgba(0,0,0,0.5)",
           }}
         >
-          <MDTypography variant="h2" fontWeight="bold" color="white" mb={2}>
+          <Typography
+            variant="h2"
+            sx={{
+              mb: 2,
+              fontWeight: "bold",
+              color: "white", // Explicitement défini en blanc
+            }}
+          >
             Bienvenue {user?.name}
-          </MDTypography>
-          <MDTypography variant="h5" color="white">
+          </Typography>
+          <Typography
+            variant="h5"
+            sx={{
+              color: "white", // Explicitement défini en blanc
+            }}
+          >
             Votre portail étudiant pour une expérience universitaire enrichissante
-          </MDTypography>
+          </Typography>
         </MDBox>
       </MDBox>
 
@@ -177,8 +218,10 @@ function Dashboard() {
                 overflow: "hidden",
                 borderRadius: "15px",
                 cursor: "pointer",
-                "&:hover .overlay": {
-                  bgcolor: "rgba(0,0,0,0.2)",
+                "&:hover": {
+                  "& .overlay": {
+                    bgcolor: "rgba(0,0,0,0.2)",
+                  },
                 },
               }}
             >
@@ -220,8 +263,10 @@ function Dashboard() {
                 overflow: "hidden",
                 borderRadius: "15px",
                 cursor: "pointer",
-                "&:hover .overlay": {
-                  bgcolor: "rgba(0,0,0,0.2)",
+                "&:hover": {
+                  "& .overlay": {
+                    bgcolor: "rgba(0,0,0,0.2)",
+                  },
                 },
               }}
             >
@@ -290,7 +335,6 @@ function Dashboard() {
           ))}
         </Grid>
       </MDBox>
-
       <Footer />
     </DashboardLayout>
   );

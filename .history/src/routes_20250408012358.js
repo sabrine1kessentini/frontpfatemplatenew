@@ -52,7 +52,7 @@ import { Logout } from "@mui/icons-material";
 const routes = [
   {
     type: "collapse",
-    name: "Dashboard",
+    name: "Accueil",
     key: "dashboard",
     icon: <Icon fontSize="small">dashboard</Icon>,
     route: "/dashboard",

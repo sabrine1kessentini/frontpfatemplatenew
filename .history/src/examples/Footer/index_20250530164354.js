@@ -33,9 +33,9 @@ function Footer({ company, links }) {
 
   const getIcon = (name) => {
     switch (name) {
-      case "Page Facebook":
+      case " Facebook":
         return "facebook";
-      case "Page Instagram":
+      case "Instagram":
         return "camera_alt";
       case "Linkedin":
         return "linkedin";

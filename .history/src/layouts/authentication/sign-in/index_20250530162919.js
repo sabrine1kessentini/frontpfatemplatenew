@@ -39,10 +39,7 @@ function Login() {
 
       navigate("/dashboard");
     } catch (err) {
-      setError(
-        err.response?.data?.message ||
-          "Adresse e-mail ou mot de passe incorrect. Veuillez réessayer."
-      );
+      setError(err.response?.data?.message || "Adresse e-mail ou mot de passe incorrect. Veuillez réessayer.");
       console.error("Login error:", err);
     } finally {
       setIsLoading(false);

@@ -31,31 +31,13 @@ function Footer({ company, links }) {
   const { href, name } = company;
   const { size } = typography;
 
-  const getIcon = (name) => {
-    switch (name) {
-      case "Page Facebook":
-        return "facebook";
-      case "Page Instagram":
-        return "camera_alt";
-      case "Linkedin":
-        return "linkedin";
-      default:
-        return "link";
-    }
-  };
-
   const renderLinks = () =>
     links.map((link) => (
       <MDBox key={link.name} component="li" px={2} lineHeight={1}>
         <Link href={link.href} target="_blank">
-          <MDBox display="flex" alignItems="center">
-            <Icon fontSize="small" sx={{ mr: 0.5 }}>
-              {getIcon(link.name)}
-            </Icon>
-            <MDTypography variant="button" fontWeight="regular" color="text">
-              {link.name}
-            </MDTypography>
-          </MDBox>
+          <MDTypography variant="button" fontWeight="regular" color="text">
+            {link.name}
+          </MDTypography>
         </Link>
       </MDBox>
     ));
@@ -109,11 +91,12 @@ function Footer({ company, links }) {
 
 // Setting default values for the props of Footer
 Footer.defaultProps = {
-  company: { href: "https://iit.tn/", name: "IIT Sfax" },
+  company: { href: "https://www.creative-tim.com/", name: "Creative Tim" },
   links: [
     { href: "https://www.facebook.com/iitsfax", name: "Page Facebook" },
-    { href: "https://www.instagram.com/iit_sfax/?__pwa=1", name: "Page Instagram" },
-    { href: "https://www.linkedin.com/company/iitsfax/", name: "Linkedin" },
+    { href: "https://www.creative-tim.com/presentation", name: "About Us" },
+    { href: "https://www.creative-timlog.com/b", name: "Blog" },
+    { href: "https://www.creative-tim.com/license", name: "License" },
   ],
 };
 

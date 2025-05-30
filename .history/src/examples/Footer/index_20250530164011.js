@@ -36,7 +36,7 @@ function Footer({ company, links }) {
       case "Page Facebook":
         return "facebook";
       case "Page Instagram":
-        return "camera_alt";
+        return "instagram";
       case "Linkedin":
         return "linkedin";
       default:

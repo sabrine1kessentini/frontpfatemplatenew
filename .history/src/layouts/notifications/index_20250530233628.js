@@ -178,7 +178,6 @@ function Notifications() {
                 isSorted={false}
                 entriesPerPage={7}
                 showTotalEntries={true}
-                noEndBorder
                 pagination
               />
             )}

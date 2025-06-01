@@ -232,7 +232,7 @@ function DataTable({
         {showTotalEntries && (
           <MDBox mb={{ xs: 3, sm: 0 }}>
             <MDTypography variant="button" color="secondary" fontWeight="regular">
-              Affichage de {entriesStart} à {entriesEnd} sur {rows.length} notifications
+              Showing {entriesStart} to {entriesEnd} of {rows.length} entries
             </MDTypography>
           </MDBox>
         )}

@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
-import { Routes, Route, Navigate, useLocation } from "react-router-dom";
+import { Routes, Route, Navigate, useLocation, useNavigate } from "react-router-dom";
 import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import Icon from "@mui/material/Icon";
@@ -15,8 +15,8 @@ import { CacheProvider } from "@emotion/react";
 import createCache from "@emotion/cache";
 import routes from "routes";
 import { useMaterialUIController, setMiniSidenav, setOpenConfigurator } from "context";
-import brandWhite from "assets/images/logo-ct.png";
-import brandDark from "assets/images/logo-ct-dark.png";
+import brandWhite from "assets/images/logoiit.png";
+import brandDark from "assets/images/logoiit.png";
 import Login from "layouts/authentication/sign-in";
 import PrivateRoute from "components/PrivateRoute";
 import { AuthProvider } from "./authContext";
@@ -37,6 +37,7 @@ function AppContent() {
   const [onMouseEnter, setOnMouseEnter] = useState(false);
   const [rtlCache, setRtlCache] = useState(null);
   const { pathname } = useLocation();
+  const navigate = useNavigate();
 
   // Cache for the rtl
   useMemo(() => {
@@ -66,6 +67,11 @@ function AppContent() {
 
   // Change the openConfigurator state
   const handleConfiguratorOpen = () => setOpenConfigurator(dispatch, !openConfigurator);
+
+  // Handle brand click to navigate to dashboard
+  const handleBrandClick = () => {
+    navigate("/dashboard");
+  };
 
   // Setting the dir attribute for the body element
   useEffect(() => {
@@ -118,6 +124,46 @@ function AppContent() {
       sx={{ cursor: "pointer" }}
       onClick={handleConfiguratorOpen}
     >
+      <Icon fontSize="small" color="inherit">
+        settings
+      </Icon>
+    </MDBox>
+  );
+
+  // Custom brand component with click handler
+  const BrandComponent = () => (
+    <MDBox
+      display="flex"
+      justifyContent="center"
+      alignItems="center"
+      flexDirection="column"
+      sx={{ cursor: "pointer" }}
+      onClick={handleBrandClick}
+    >
+      <MDBox
+        component="img"
+        src={(transparentSidenav && !darkMode) || whiteSidenav ? brandDark : brandWhite}
+        alt="Logo"
+        sx={{
+          width: "100%",
+          height: "auto",
+          maxHeight: "100px",
+          objectFit: "contain",
+        }}
+      />
+      <MDBox
+        component="span"
+        color={darkMode ? "white" : "dark"}
+        fontWeight="bold"
+        mt={1}
+        sx={{
+          "&:hover": {
+            textDecoration: "underline",
+          },
+        }}
+      >
+        Institut International du Technologie
+      </MDBox>
     </MDBox>
   );
 
@@ -129,8 +175,7 @@ function AppContent() {
           <>
             <Sidenav
               color={sidenavColor}
-              brand={(transparentSidenav && !darkMode) || whiteSidenav ? brandDark : brandWhite}
-              brandName="Portail Universitaire"
+              brand={<BrandComponent />}
               routes={routes}
               onMouseEnter={handleOnMouseEnter}
               onMouseLeave={handleOnMouseLeave}
@@ -155,8 +200,7 @@ function AppContent() {
         <>
           <Sidenav
             color={sidenavColor}
-            brand={(transparentSidenav && !darkMode) || whiteSidenav ? brandDark : brandWhite}
-            brandName="Institut International du Technologie"
+            brand={<BrandComponent />}
             routes={routes}
             onMouseEnter={handleOnMouseEnter}
             onMouseLeave={handleOnMouseLeave}

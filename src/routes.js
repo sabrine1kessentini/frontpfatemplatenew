@@ -7,6 +7,7 @@ import SignIn from "layouts/authentication/sign-in";
 import SignUp from "layouts/authentication/sign-up";
 import EmploiDuTemps from "layouts/tables";
 import PrivateRoute from "components/PrivateRoute";
+import Reclamation from "layouts/reclamation";
 
 // @mui icons
 import Icon from "@mui/material/Icon";
@@ -79,6 +80,15 @@ const routes = [
     icon: <Icon fontSize="small">description</Icon>,
     route: "/documents",
     component: <DocumentList />,
+    protected: true,
+  },
+  {
+    type: "collapse",
+    name: "Réclamations",
+    key: "reclamation",
+    icon: <Icon fontSize="small">feedback</Icon>,
+    route: "/reclamation",
+    component: <Reclamation />,
     protected: true,
   },
   {

@@ -60,7 +60,7 @@ const routes = [
   },
   {
     type: "collapse",
-    name: "Tables",
+    name: "Emploi",
     key: "tables",
     icon: <Icon fontSize="small">table_view</Icon>,
     route: "/tables",

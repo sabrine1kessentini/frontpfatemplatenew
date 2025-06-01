@@ -15,7 +15,7 @@ import { CacheProvider } from "@emotion/react";
 import createCache from "@emotion/cache";
 import routes from "routes";
 import { useMaterialUIController, setMiniSidenav, setOpenConfigurator } from "context";
-import brandWhite from "assets/images/logo-ct.png";
+import brandWhite from "assets/images/logoiit.png";
 import brandDark from "assets/images/logo-ct-dark.png";
 import Login from "layouts/authentication/sign-in";
 import PrivateRoute from "components/PrivateRoute";
@@ -118,6 +118,9 @@ function AppContent() {
       sx={{ cursor: "pointer" }}
       onClick={handleConfiguratorOpen}
     >
+      <Icon fontSize="small" color="inherit">
+        settings
+      </Icon>
     </MDBox>
   );
 
@@ -130,10 +133,27 @@ function AppContent() {
             <Sidenav
               color={sidenavColor}
               brand={(transparentSidenav && !darkMode) || whiteSidenav ? brandDark : brandWhite}
-              brandName="Portail Universitaire"
               routes={routes}
               onMouseEnter={handleOnMouseEnter}
               onMouseLeave={handleOnMouseLeave}
+              sx={{
+                "& .MuiDrawer-paper": {
+                  overflow: "hidden", // Empêche le débordement
+                },
+                "& .MuiBox-root": {
+                  width: "100%", // Prend toute la largeur
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  padding: "1rem", // Ajoute un peu d'espace autour
+                },
+                "& .MuiBox-root img": {
+                  width: "100%", // Le logo prend toute la largeur disponible
+                  height: "auto", // Maintient les proportions
+                  maxHeight: "100px", // Ajustez selon vos besoins
+                  objectFit: "contain", // Assure que tout le logo est visible
+                },
+              }}
             />
             <Configurator />
             {configsButton}
@@ -156,11 +176,33 @@ function AppContent() {
           <Sidenav
             color={sidenavColor}
             brand={(transparentSidenav && !darkMode) || whiteSidenav ? brandDark : brandWhite}
-            brandName="Institut International du Technologie"
             routes={routes}
             onMouseEnter={handleOnMouseEnter}
             onMouseLeave={handleOnMouseLeave}
+            sx={{
+              "& .MuiDrawer-paper": {
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                backgroundColor: darkMode ? "#1e1e2f" : "#ffffff",
+              },
+              "& .MuiDrawer-paper .MuiBox-root:first-of-type": {
+                height: "120px", // Hauteur du conteneur du logo
+                width: "100%",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                padding: "1rem",
+                backgroundColor: "#f5f5f5", // fond plus clair pour bien voir le logo
+              },
+              "& .MuiDrawer-paper .MuiBox-root:first-of-type img": {
+                maxHeight: "100%", // occupe la hauteur du conteneur
+                maxWidth: "80%", // pour éviter de dépasser horizontalement
+                objectFit: "contain",
+              },
+            }}
           />
+
           <Configurator />
           {configsButton}
         </>

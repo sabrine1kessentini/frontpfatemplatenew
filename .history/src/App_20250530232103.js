@@ -15,8 +15,8 @@ import { CacheProvider } from "@emotion/react";
 import createCache from "@emotion/cache";
 import routes from "routes";
 import { useMaterialUIController, setMiniSidenav, setOpenConfigurator } from "context";
-import brandWhite from "assets/images/logo-ct.png";
-import brandDark from "assets/images/logo-ct-dark.png";
+import brandWhite from "assets/images/logoiit.png";
+import brandDark from "assets/images/logoiit.png";
 import Login from "layouts/authentication/sign-in";
 import PrivateRoute from "components/PrivateRoute";
 import { AuthProvider } from "./authContext";
@@ -118,6 +118,9 @@ function AppContent() {
       sx={{ cursor: "pointer" }}
       onClick={handleConfiguratorOpen}
     >
+      <Icon fontSize="small" color="inherit">
+        settings
+      </Icon>
     </MDBox>
   );
 
@@ -130,7 +133,7 @@ function AppContent() {
             <Sidenav
               color={sidenavColor}
               brand={(transparentSidenav && !darkMode) || whiteSidenav ? brandDark : brandWhite}
-              brandName="Portail Universitaire"
+              brandName="Institut International du Technologie"
               routes={routes}
               onMouseEnter={handleOnMouseEnter}
               onMouseLeave={handleOnMouseLeave}
@@ -151,12 +154,13 @@ function AppContent() {
   ) : (
     <ThemeProvider theme={darkMode ? themeDark : theme}>
       <CssBaseline />
-      {layout === "dashboard" && pathname !== "/authentication/sign-in" && (
+      {layout === "dashboard" && pathname !== "/Dashboard" && (
         <>
           <Sidenav
             color={sidenavColor}
             brand={(transparentSidenav && !darkMode) || whiteSidenav ? brandDark : brandWhite}
-            brandName="Institut International du Technologie"
+            brandName="Institut International
+             du Technologie"
             routes={routes}
             onMouseEnter={handleOnMouseEnter}
             onMouseLeave={handleOnMouseLeave}
